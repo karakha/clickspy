@@ -220,14 +220,6 @@ cookieButton.addEventListener("click", function() {
     setCookie("cookies", cookies, 7);  // Save cookies for 7 days
     setCookie("cookiesPerClick", cookiesPerClick, 7);  // Save cookies per click for 7 days
 });
-
-// Optional: Restore cookie count from local storage if it exists
-window.onload = () => {
-    loadGameState();  // reads from document.cookie
-    cookieCountDisplay.textContent = formatCookies(cookies);
-  };
-  
-
 // Function to update local storage when cookie count changes
 function updateCookieCountInStorage() {
     localStorage.setItem('cookieCount', cookieCountDisplay.textContent);
@@ -253,10 +245,6 @@ openWindow.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
     popup.style.display = "none";
 });
-function saveButtonImage(dataUrl) {
-    // Save button image as a cookie
-    document.cookie = `buttonImage=${encodeURIComponent(dataUrl)}; path=/; max-age=31536000`;
-}
 
 function saveFavicon(dataUrl) {
     // Update the favicon with the same image
@@ -291,24 +279,34 @@ uploadButtonImage.addEventListener('change', function() {
     }
 });
 
-function loadButtonImage() {
-    const dataUrl = getCookie('buttonImage');
-    if (dataUrl) {
-        // Load the button image from the cookie
-        cookieButton.src = decodeURIComponent(dataUrl);
+function saveButtonImage(dataUrl) {
+    // Save button image to localStorage
+    localStorage.setItem('buttonImage', dataUrl);
+}
 
-        // Set the favicon to the saved button image
-        saveFavicon(decodeURIComponent(dataUrl));
+function saveFavicon(dataUrl) {
+    // Update the favicon with the same image
+    const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+    link.type = "image/x-icon";
+    link.rel = "icon";
+    link.href = dataUrl;
+
+    // Append the link element to the head if not already there
+    if (!document.querySelector("link[rel*='icon']")) {
+        document.head.appendChild(link);
     }
 }
 
-// Load the button image and favicon when the page loads
-loadButtonImage();
+function loadButtonImage() {
+    const dataUrl = localStorage.getItem('buttonImage');
+    if (dataUrl) {
+        // Load the button image from localStorage
+        cookieButton.src = dataUrl;
 
-
-// After everything loads
-loadButtonImage();
-
+        // Set the favicon to the saved button image
+        saveFavicon(dataUrl);
+    }
+}
 
 // Function to check and load game state from cookies
 function loadGameState() {
@@ -325,5 +323,9 @@ function loadGameState() {
     upgradeButton.textContent = `Upgrade (Cost: ${formatCookies(upgradeCost)})`;
 }
 
-// Call this function when the page loads to load saved game state
-loadGameState();
+window.onload = () => {
+    loadButtonImage();
+    loadGameState(); // Optionally load other game state data
+    loadGameState();  // reads from document.cookie
+    cookieCountDisplay.textContent = formatCookies(cookies);
+  };
