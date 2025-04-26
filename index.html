@@ -7,13 +7,43 @@
     <link rel="stylesheet" href="fancy.css">
 </head>
 <body>
+
     <div id="game">
-        <!-- The image itself is now the button -->
+        <!-- Cookie button (image) -->
         <img id="cookieButton" src="button.png" alt="Cookie Button">
-        <p class="cookieCount"><span id="cookieCount">0</span> <br>   Cookies</p>
-        <button id="upgradeButton">Upgrade</button>
+
+        <!-- Cookie count -->
+        <p class="cookieNumberCount">
+            <span id="cookieCount">0</span><br>Cookies
+        </p>
+
+        <!-- Upgrade button -->
+         <div class="buttons">
+            <button id="openWindow"> &#9776;</button>
+            <button id="upgradeButton">Upgrade (Cost: 10)</button>
+         </div>
     </div>
+
+    <!-- Popup window -->
+    <div id="popupWindow" style="display: none;">
+        <div id="popupContent">
+            <div class="popupWindowTitle">
+                Settings
+                <button class="popupCloseButton">X</button>
+            </div>
+
+            <div class="popupSettings">
+                <span>Reset your progress</span>
+                <button id="resetButton">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast messages -->
     <div id="toast-container"></div>
+
+    <!-- Scripts -->
     <script src="scrapped.js"></script>
+
 </body>
 </html>
