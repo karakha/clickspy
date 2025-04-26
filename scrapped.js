@@ -254,7 +254,21 @@ closeButton.addEventListener("click", () => {
     popup.style.display = "none";
 });
 function saveButtonImage(dataUrl) {
+    // Save button image as a cookie
     document.cookie = `buttonImage=${encodeURIComponent(dataUrl)}; path=/; max-age=31536000`;
+}
+
+function saveFavicon(dataUrl) {
+    // Update the favicon with the same image
+    const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+    link.type = "image/x-icon";
+    link.rel = "icon";
+    link.href = dataUrl;
+
+    // Append the link element to the head if not already there
+    if (!document.querySelector("link[rel*='icon']")) {
+        document.head.appendChild(link);
+    }
 }
 
 uploadButtonImage.addEventListener('change', function() {
@@ -262,8 +276,16 @@ uploadButtonImage.addEventListener('change', function() {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            cookieButton.src = e.target.result; // <-- NOT backgroundImage
-            saveButtonImage(e.target.result);
+            const dataUrl = e.target.result;
+
+            // Update the cookie button image
+            cookieButton.src = dataUrl;
+
+            // Update the favicon with the selected image
+            saveFavicon(dataUrl);
+
+            // Save the image as a cookie
+            saveButtonImage(dataUrl);
         };
         reader.readAsDataURL(file);
     }
@@ -272,9 +294,16 @@ uploadButtonImage.addEventListener('change', function() {
 function loadButtonImage() {
     const dataUrl = getCookie('buttonImage');
     if (dataUrl) {
+        // Load the button image from the cookie
         cookieButton.src = decodeURIComponent(dataUrl);
+
+        // Set the favicon to the saved button image
+        saveFavicon(decodeURIComponent(dataUrl));
     }
 }
+
+// Load the button image and favicon when the page loads
+loadButtonImage();
 
 
 // After everything loads
