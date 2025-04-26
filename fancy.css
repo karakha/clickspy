@@ -88,7 +88,14 @@ button {
     font-family: monospace;
     padding: 0;
 }
-
+.popupSettings label {
+    display: block;
+    background-color: black;
+    color: lightblue;
+    text-decoration: underline;
+    font-family: monospace;
+    padding: 0;
+}
 #game {
     display: flex;
     justify-content: center;

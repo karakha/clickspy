@@ -13,6 +13,7 @@ const closeButton = document.querySelector("#popupWindow button");
 const cookieCountDisplay = document.getElementById('cookieCount');
 const resetButton = document.querySelector('.popupSettings button');
 const popupWindow = document.getElementById('popupWindow');
+const uploadButtonImage = document.getElementById('uploadButtonImage');
 
 // Detect if running below 768 width
 function isMobileView() {
@@ -252,6 +253,33 @@ openWindow.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
     popup.style.display = "none";
 });
+function saveButtonImage(dataUrl) {
+    document.cookie = `buttonImage=${encodeURIComponent(dataUrl)}; path=/; max-age=31536000`;
+}
+
+uploadButtonImage.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            cookieButton.src = e.target.result; // <-- NOT backgroundImage
+            saveButtonImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function loadButtonImage() {
+    const dataUrl = getCookie('buttonImage');
+    if (dataUrl) {
+        cookieButton.src = decodeURIComponent(dataUrl);
+    }
+}
+
+
+// After everything loads
+loadButtonImage();
+
 
 // Function to check and load game state from cookies
 function loadGameState() {
