@@ -119,9 +119,13 @@ button {
     align-items: center;
     background-color: white;
     color: black;
-    border: 5px solid white;
-    padding: 0 5px;
+    border-left: 3px solid white;
+    border-top: 3px solid white;
+    border-bottom: 3px solid white;
+    border-right: 3px solid white;
     text-align: left;
+    padding: 0 5px;
+    min-width: 185px;
 }
 
 #cookieCount {
@@ -129,21 +133,18 @@ button {
     font-family: monospace;
     background-color: black;
     color: white;
-    padding: 0 5px;
-    margin: 0;
+    padding: 0 10px;
+    margin: 0 0 0px 0;
     display: inline-block;
-    width: 100%;
-    min-width: 185px;
+    width: 95%;
     text-align: left;
 }
-
-
 #cookieButton {
     width: 200px;
     height: 200px;
     border: none;
     cursor: pointer;
-    border: 5px solid white;
+    border: 3px solid white;
     display: block;
 }
 
@@ -151,7 +152,6 @@ button {
     align-items: flex-start;
     text-align: left;
     width: 100%;
-    line-height: 1.25;
 }
 .toast {
     position: fixed;
