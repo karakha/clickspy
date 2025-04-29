@@ -152,6 +152,12 @@ button {
     align-items: flex-start;
     text-align: left;
     width: 100%;
+    font-size: 10pt;
+}
+@media (max-width: 600px) {
+    #cookieLabel {
+        margin: 2px 0;
+    }
 }
 .toast {
     position: fixed;
