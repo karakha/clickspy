@@ -32,12 +32,6 @@ button {
     border: none;
     padding: 5px 10px;
 }
-.buttons {
-    display: flex;
-    gap: 10px;      /* space between the two buttons */
-    align-items: center;
-  }
-  
 #openWindow {
     padding: 4px 6px;
 }
@@ -52,11 +46,13 @@ button {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.1s ease-out forwards;
 }
 .popupCloseButton {
     background-color: rgb(177, 95, 95);
     color: white;
     margin-left: auto; /* THIS IS GOOD */
+    cursor: pointer;
 }
 
 .popupWindowTitle {
@@ -71,7 +67,7 @@ button {
 
 #popupContent {
   background: rgb(0, 0, 0);
-  border: 5px solid white;
+  border: 3px solid white;
   color: rgb(255, 255, 255);
   font-family: monospace;
   width: 250px;
@@ -87,6 +83,7 @@ button {
     text-decoration: underline;
     font-family: monospace;
     padding: 0;
+    cursor: pointer;
 }
 .popupSettings label {
     display: block;
@@ -95,6 +92,17 @@ button {
     text-decoration: underline;
     font-family: monospace;
     padding: 0;
+    cursor: pointer;
+}
+.popupSettings input {
+    display: block;
+    background-color: black;
+    color: lightblue;
+    font-family: monospace;
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid lightblue;
+    cursor: text;
 }
 #game {
     display: flex;

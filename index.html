@@ -14,8 +14,10 @@
 
         <!-- Cookie count -->
         <p class="cookieNumberCount">
-            <span id="cookieCount">0</span><br>Cookies
+            <span id="cookieCount">0</span><br>
+            <span id="cookieLabel">Cookies</span>
         </p>
+        
 
         <!-- Upgrade button -->
          <div class="buttons">
@@ -34,11 +36,14 @@
 
             <div class="popupSettings">
                 <span>Reset your progress and settings</span>
-                <button id="resetButton">Think twice before resetting.</button>
+                <button id="resetButton">Think twice before resetting!</button>
                 <br>
                 <span>Pick your own clicker photo</span>
                 <input type="file" id="uploadButtonImage" style="display: none;">
                 <label for="uploadButtonImage" class="niceButton">Customize the image!</label>
+                <br>
+                <span>Rename the cookie</span>
+                <input type="text" id="cookieNameInput" placeholder="Enter cookie name" />
             </div>
         </div>
     </div>
@@ -47,7 +52,7 @@
     <div id="toast-container"></div>
 
     <!-- Scripts -->
+    <script src="numberFormat.js"></script>
     <script src="scrapped.js"></script>
-
 </body>
 </html>
