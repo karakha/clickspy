@@ -110,7 +110,7 @@ button {
     align-items: center;
     height: 300px;
     flex-direction: column;
-    padding-top: 100px;
+    padding: 10vh;
 }
 
 .cookieNumberCount {
