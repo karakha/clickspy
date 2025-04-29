@@ -151,6 +151,7 @@ button {
     align-items: flex-start;
     text-align: left;
     width: 100%;
+    line-height: 1.5;
 }
 .toast {
     position: fixed;
