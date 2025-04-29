@@ -114,10 +114,14 @@ button {
 }
 
 .cookieNumberCount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: white;
     color: black;
     border: 5px solid white;
-    padding: 0;
+    padding: 0 5px;
+    text-align: left;
 }
 
 #cookieCount {
@@ -127,9 +131,12 @@ button {
     color: white;
     padding: 0 5px;
     margin: 0;
-    min-width: 185px;
     display: inline-block;
+    width: 100%;
+    min-width: 185px;
+    text-align: left;
 }
+
 
 #cookieButton {
     width: 200px;
@@ -140,6 +147,11 @@ button {
     display: block;
 }
 
+#cookieLabel {
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+}
 .toast {
     position: fixed;
     top: 20px;
