@@ -120,11 +120,11 @@ button {
     background-color: white;
     color: black;
     border-left: 4px solid white;
-    border-top: 3px solid white;
-    border-bottom: 3px solid white;
+    border-top: 4px solid white;
+    border-bottom: 4px solid white;
     border-right: 4px solid white;
     text-align: left;
-    padding: 0 5px;
+    padding: 0 2px;
     min-width: 185px;
 }
 
@@ -133,7 +133,7 @@ button {
     font-family: monospace;
     background-color: black;
     color: white;
-    padding: 0 10px;
+    padding: 0 7px;
     margin: 0 0 0px 0;
     display: inline-block;
     width: 95%;
@@ -146,6 +146,9 @@ button {
     cursor: pointer;
     border: 3px solid white;
     display: block;
+}
+#cookieButton:hover {
+    border: 3px solid black;
 }
 
 #cookieLabel {

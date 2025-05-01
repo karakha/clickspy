@@ -57,7 +57,7 @@ upgradeButton.addEventListener("click", function() {
 
             upgradeCost = Math.ceil(upgradeCost * 1.25);
             setCookie("upgradeCost", upgradeCost, 7); // Save upgrade cost after upgrade
-            upgradeButton.textContent = `Upgrade (Cost: ${formatCookies(upgradeCost)})`;
+            upgradeButton.textContent = `Upgrade (${formatCookies(upgradeCost)} Cookies)`;
         }, 0); // Wait until the current call stack is empty to update the UI
     } else {
         showToast("Not enough cookies! Need \n" + formatCookies(upgradeCost));
