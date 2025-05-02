@@ -9,7 +9,7 @@ if (typeof formatCookies === "function") {
 
     window.formatCookies = function(num) {
         if (!isFinite(num)) return "∞";  // Infinity patch
-        if (num >= MAX_COOKIES) return "MAX";  // Optional soft cap display
+        if (num >= MAX_COOKIES) return "dafaq?";  // Optional soft cap display
         return originalFormatCookies(num);
     };
 }

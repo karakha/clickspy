@@ -19,7 +19,6 @@ const el = {
 };
 
 // === Utility Functions ===
-const isMobileView = () => window.innerWidth <= 768;
 const setCookie = (name, value, days) => document.cookie = `${name}=${value};expires=${new Date(Date.now() + days*864e5).toUTCString()};path=/`;
 const getCookie = (name) => (document.cookie.split("; ").find(row => row.startsWith(name + "=")) || "").split("=")[1] || null;
 
@@ -27,7 +26,7 @@ const getCookie = (name) => (document.cookie.split("; ").find(row => row.startsW
 function showToast(message) {
     document.querySelector(".toast, .toast-mobile")?.remove();
     const toast = document.createElement("div");
-    toast.className = isMobileView() ? "toast-mobile" : "toast";
+    toast.className = "toast";
     toast.textContent = message;
     el.toastContainer.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
@@ -36,7 +35,7 @@ function showToast(message) {
 // === Game Logic ===
 function updateUI() {
     el.cookieCount.textContent = formatCookies(cookies);
-    el.upgradeButton.textContent = `Upgrade (${formatCookies(upgradeCost)} Cookies)`;
+    el.upgradeButton.textContent = `Upgrade (${formatCookies(upgradeCost)})`;
     el.cookieLabel.textContent = cookieName;
 }
 
@@ -104,7 +103,7 @@ el.upgradeButton.addEventListener("click", () => {
         upgradeCost = Math.ceil(upgradeCost * 1.25);
         showToast(`Cookies per click upgraded! \n${formatCookies(cookiesPerClick)}`);
     } else {
-        showToast(`Not enough cookies! Need \n$formatCookies(upgradeCost)}`);
+        showToast(`Not enough cookies! Need \n${formatCookies(upgradeCost)} Cookies`);
     }
     updateUI();
     saveGame();
