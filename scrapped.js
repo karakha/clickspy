@@ -15,7 +15,8 @@ const el = {
     resetButton: document.querySelector(".popupSettings button"),
     uploadImage: document.getElementById("uploadButtonImage"),
     cookieLabel: document.getElementById("cookieLabel"),
-    cookieNameInput: document.getElementById("cookieNameInput")
+    cookieNameInput: document.getElementById("cookieNameInput"),
+    titlebarText: document.getElementById("titlebarText")
 };
 
 // === Utility Functions ===
@@ -55,8 +56,10 @@ function loadGame() {
         cookieName = savedName;
         el.cookieNameInput.value = savedName;
     }
+    el.titlebarText.textContent = `da ${cookieName.toLowerCase()} game`;
     updateUI();
 }
+
 
 function resetGame() {
     document.cookie.split(";").forEach(c => {
@@ -101,13 +104,14 @@ el.upgradeButton.addEventListener("click", () => {
         cookies -= upgradeCost;
         cookiesPerClick *= 2;
         upgradeCost = Math.ceil(upgradeCost * 1.25);
-        showToast(`Cookies per click upgraded! \n${formatCookies(cookiesPerClick)}`);
+        showToast(`${cookieName} per click now\n${formatCookies(cookiesPerClick)}`);
     } else {
-        showToast(`Not enough cookies! Need \n${formatCookies(upgradeCost)} Cookies`);
+        showToast(`Not enough ${cookieName}!\nNeed ${formatCookies(upgradeCost)} ${cookieName}`);
     }
     updateUI();
     saveGame();
 });
+
 
 el.resetButton.addEventListener("click", resetGame);
 el.openWindow.addEventListener("click", () => el.popup.style.display = "flex");
@@ -129,8 +133,11 @@ el.uploadImage.addEventListener("change", function() {
 el.cookieNameInput.addEventListener("input", () => {
     cookieName = el.cookieNameInput.value.trim() || "Cookies";
     el.cookieLabel.textContent = cookieName;
+    el.titlebarText.textContent = `da ${cookieName.toLowerCase()} game`;
     localStorage.setItem("cookieName", cookieName);
+    updateUI();
 });
+
 
 // === Init ===
 window.onload = () => {
@@ -138,3 +145,4 @@ window.onload = () => {
     loadButtonImage();
     loadGame();
 };
+
