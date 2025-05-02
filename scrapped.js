@@ -1,222 +1,141 @@
-
+// === Game State ===
 let cookies = 0;
 let cookiesPerClick = 1;
 let upgradeCost = 10;
-let cookieName = "Cookies"; // Default name
+let cookieName = "Cookies";
 
-// Get elements
-const cookieButton = document.getElementById("cookieButton");
-const cookieCount = document.getElementById("cookieCount");
-const upgradeButton = document.getElementById("upgradeButton");
-const openWindow = document.getElementById("openWindow");
-const popup = document.getElementById("popupWindow");
-const closeButton = document.querySelector("#popupWindow button");
-const resetButton = document.querySelector('.popupSettings button');
-const popupWindow = document.getElementById('popupWindow');
-const uploadButtonImage = document.getElementById('uploadButtonImage');
-const cookieLabel = document.getElementById("cookieLabel");
-const cookieNameInput = document.getElementById("cookieNameInput");
+// === Elements ===
+const el = {
+    cookieButton: document.getElementById("cookieButton"),
+    cookieCount: document.getElementById("cookieCount"),
+    upgradeButton: document.getElementById("upgradeButton"),
+    openWindow: document.getElementById("openWindow"),
+    popup: document.getElementById("popupWindow"),
+    closeButton: document.querySelector("#popupWindow button"),
+    resetButton: document.querySelector(".popupSettings button"),
+    uploadImage: document.getElementById("uploadButtonImage"),
+    cookieLabel: document.getElementById("cookieLabel"),
+    cookieNameInput: document.getElementById("cookieNameInput")
+};
 
-// Detect if running below 768 width
-function isMobileView() {
-    return window.innerWidth <= 768;
-}
+// === Utility Functions ===
+const isMobileView = () => window.innerWidth <= 768;
+const setCookie = (name, value, days) => document.cookie = `${name}=${value};expires=${new Date(Date.now() + days*864e5).toUTCString()};path=/`;
+const getCookie = (name) => (document.cookie.split("; ").find(row => row.startsWith(name + "=")) || "").split("=")[1] || null;
 
-// Function to set cookies
-function setCookie(name, value, days) {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000)); // expires in 'days'
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
-// Function to get cookies
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-// Upgrade button logic
-upgradeButton.addEventListener("click", function() {
-    if (cookies >= upgradeCost) {
-        cookies -= upgradeCost;
-        setCookie("cookies", cookies, 7);  // Save cookies after upgrade
-
-        // Delayed update to reflect the change correctly
-        setTimeout(() => {
-            cookieCount.textContent = formatCookies(cookies); // Now this should show the correct amount
-
-            cookiesPerClick *= 2;
-            setCookie("cookiesPerClick", cookiesPerClick, 7); // Save cookies per click after upgrade
-            showToast("Upgrade bought! Cookies per click: \n" + formatCookies(cookiesPerClick));
-
-            upgradeCost = Math.ceil(upgradeCost * 1.25);
-            setCookie("upgradeCost", upgradeCost, 7); // Save upgrade cost after upgrade
-            upgradeButton.textContent = `Upgrade (${formatCookies(upgradeCost)} Cookies)`;
-        }, 0); // Wait until the current call stack is empty to update the UI
-    } else {
-        showToast("Not enough cookies! Need \n" + formatCookies(upgradeCost));
-    }
-});
-
-// Toasting System
+// === Toasts ===
 function showToast(message) {
-    // Remove any existing toast
-    const existing = document.querySelector('.toast, .toast-mobile');
-    if (existing) existing.remove();
-
-    const toast = document.createElement('div');
-    const isMobile = isMobileView();
-
-    toast.className = isMobile ? 'toast-mobile' : 'toast';
+    document.querySelector(".toast, .toast-mobile")?.remove();
+    const toast = document.createElement("div");
+    toast.className = isMobileView() ? "toast-mobile" : "toast";
     toast.textContent = message;
-
-    // Append toast based on the device type
-    if (isMobile) {
-        document.body.appendChild(toast); // Directly append to body for mobile view
-    } else {
-        const container = document.getElementById('toast-container');
-        container.appendChild(toast); // Ensure the container exists before appending
-    }
-    setTimeout(() => toast.remove(), 3000); // Remove after 3 seconds
+    el.toastContainer.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
 }
 
-// Event listener for reset button
-resetButton.addEventListener('click', resetProgress);
+// === Game Logic ===
+function updateUI() {
+    el.cookieCount.textContent = formatCookies(cookies);
+    el.upgradeButton.textContent = `Upgrade (${formatCookies(upgradeCost)} Cookies)`;
+    el.cookieLabel.textContent = cookieName;
+}
 
-function resetProgress() {
-    // Delete all cookies
-    document.cookie.split(";").forEach(function(cookie) {
-        let cookieName = cookie.split("=")[0];
-        document.cookie = cookieName + "=;expires=" + new Date(0).toUTCString() + ";path=/";
-    });
+function saveGame() {
+    setCookie("cookies", cookies, 7);
+    setCookie("cookiesPerClick", cookiesPerClick, 7);
+    setCookie("upgradeCost", upgradeCost, 7);
+    localStorage.setItem("cookieName", cookieName);
+}
 
-    // Clear custom image and favicon
-    cookieButton.src = ''; // Reset cookie button image
-    const link = document.querySelector("link[rel*='icon']");
-    if (link) {
-        link.href = ''; // Reset the favicon
+function loadGame() {
+    cookies = parseFloat(getCookie("cookies")) || 0;
+    cookiesPerClick = parseFloat(getCookie("cookiesPerClick")) || 1;
+    upgradeCost = parseFloat(getCookie("upgradeCost")) || 10;
+    const savedName = localStorage.getItem("cookieName");
+    if (savedName) {
+        cookieName = savedName;
+        el.cookieNameInput.value = savedName;
     }
+    updateUI();
+}
 
-    // Delete the saved image from localStorage
-    localStorage.removeItem('buttonImage');
-
-    // Reload the page
+function resetGame() {
+    document.cookie.split(";").forEach(c => {
+        document.cookie = c.split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+    });
+    localStorage.removeItem("buttonImage");
+    localStorage.removeItem("cookieName");
+    el.cookieButton.src = "";
+    document.querySelector("link[rel*='icon']")?.remove();
     location.reload();
 }
 
-// Save game state whenever cookies change
-cookieButton.addEventListener("click", function() {
-    cookies += cookiesPerClick; // Increase cookies by cookies per click
-    cookieCount.textContent = formatCookies(cookies);
-    setCookie("cookies", cookies, 7);  // Save cookies for 7 days
-    setCookie("cookiesPerClick", cookiesPerClick, 7);  // Save cookies per click for 7 days
-});
-// Function to update local storage when cookie count changes
-function updateCookieCountInStorage() {
-    localStorage.setItem('cookieCount', cookieCount.textContent);   
-}
-
-// Initialize MutationObserver
-const observer = new MutationObserver(updateCookieCountInStorage);
-
-// Configuration of the observer (observe changes in child nodes or text content)
-const config = { childList: true, subtree: true };
-
-// Start observing the cookieCountDisplay element for changes
-observer.observe(cookieCount, config);
-
-// Window Logic
-openWindow.addEventListener("click", () => {
-    popup.style.display = "flex";
-});
-
-closeButton.addEventListener("click", () => {
-    popup.style.display = "none";
-});
-uploadButtonImage.addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const dataUrl = e.target.result;
-
-            // Update the cookie button image
-            cookieButton.src = dataUrl;
-
-            // Update the favicon with the selected image
-            saveFavicon(dataUrl);
-
-            // Save the image as a cookie
-            saveButtonImage(dataUrl);
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-function saveButtonImage(dataUrl) {
-    // Save button image to localStorage
-    localStorage.setItem('buttonImage', dataUrl);
-}
-
+// === Image Stuff ===
 function saveFavicon(dataUrl) {
-    // Update the favicon with the same image
-    const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
-    link.type = "image/x-icon";
-    link.rel = "icon";
-    link.href = dataUrl;
-
-    // Append the link element to the head if not already there
-    if (!document.querySelector("link[rel*='icon']")) {
+    let link = document.querySelector("link[rel*='icon']");
+    if (!link) {
+        link = document.createElement("link");
+        link.rel = "icon";
+        link.type = "image/x-icon";
         document.head.appendChild(link);
     }
+    link.href = dataUrl;
 }
 
 function loadButtonImage() {
-    const dataUrl = localStorage.getItem('buttonImage');
+    const dataUrl = localStorage.getItem("buttonImage");
     if (dataUrl) {
-        // Load the button image from localStorage
-        cookieButton.src = dataUrl;
-
-        // Set the favicon to the saved button image
+        el.cookieButton.src = dataUrl;
         saveFavicon(dataUrl);
     }
 }
 
-// Function to check and load game state from cookies
-function loadGameState() {
-    const savedCookies = getCookie("cookies");
-    const savedCookiesPerClick = getCookie("cookiesPerClick");
-    const savedUpgradeCost = getCookie("upgradeCost");
+// === Event Handlers ===
+el.cookieButton.addEventListener("click", () => {
+    cookies += cookiesPerClick;
+    updateUI();
+    saveGame();
+});
 
-    if (savedCookies) cookies = parseFloat(savedCookies);
-    if (savedCookiesPerClick) cookiesPerClick = parseFloat(savedCookiesPerClick);
-    if (savedUpgradeCost) upgradeCost = parseFloat(savedUpgradeCost);
+el.upgradeButton.addEventListener("click", () => {
+    if (cookies >= upgradeCost) {
+        cookies -= upgradeCost;
+        cookiesPerClick *= 2;
+        upgradeCost = Math.ceil(upgradeCost * 1.25);
+        showToast(`Cookies per click upgraded! \n${formatCookies(cookiesPerClick)}`);
+    } else {
+        showToast(`Not enough cookies! Need \n$formatCookies(upgradeCost)}`);
+    }
+    updateUI();
+    saveGame();
+});
 
-    // Update the UI
-    cookieCount.textContent = formatCookies(cookies);
-    upgradeButton.textContent = `Upgrade (Cost: ${formatCookies(upgradeCost)})`;
-    const savedName = localStorage.getItem("cookieName");
-if (savedName) {
-    cookieName = savedName;
-    cookieLabel.textContent = cookieName;
-    cookieNameInput.value = savedName;
-}
+el.resetButton.addEventListener("click", resetGame);
+el.openWindow.addEventListener("click", () => el.popup.style.display = "flex");
+el.closeButton.addEventListener("click", () => el.popup.style.display = "none");
 
-}
+el.uploadImage.addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const dataUrl = e.target.result;
+        el.cookieButton.src = dataUrl;
+        saveFavicon(dataUrl);
+        localStorage.setItem("buttonImage", dataUrl);
+    };
+    reader.readAsDataURL(file);
+});
 
-cookieNameInput.addEventListener("input", () => {
-    cookieName = cookieNameInput.value.trim() || "Cookies";
-    cookieLabel.textContent = cookieName;
+el.cookieNameInput.addEventListener("input", () => {
+    cookieName = el.cookieNameInput.value.trim() || "Cookies";
+    el.cookieLabel.textContent = cookieName;
     localStorage.setItem("cookieName", cookieName);
 });
 
+// === Init ===
 window.onload = () => {
+    el.toastContainer = document.getElementById("toast-container");
     loadButtonImage();
-    loadGameState(); // Optionally load other game state data
-  };
+    loadGame();
+};

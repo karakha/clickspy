@@ -8,28 +8,24 @@
     <link rel="stylesheet" href="fancy.css">
 </head>
 <body>
-
     <div id="game">
         <div class="titlebar">
-            <span> da cookie game</span>
+            <span> da clicking game</span>
         </div>
         <!-- Cookie button (image) -->
         <img id="cookieButton" src="button.png" alt="Cookie Button">
-
         <!-- Cookie count -->
         <p class="cookieNumberCount">
             <span id="cookieCount">0</span>
             <span id="cookieLabel">Cookies</span>
         </p>
-        
-
         <!-- Upgrade button -->
          <div class="buttons">
             <button id="openWindow"> &#9776;</button>
             <button id="upgradeButton">Upgrade (10 Cookies)</button>
          </div>
+         <div id="toast-container"></div>
     </div>
-
     <!-- Popup window -->
     <div id="popupWindow" style="display: none;">
         <div id="popupContent">
@@ -37,7 +33,6 @@
                 Settings
                 <button class="popupCloseButton">X</button>
             </div>
-
             <div class="popupSettings">
                 <span>Reset your progress and settings</span>
                 <button id="resetButton">Think twice before resetting!</button>
@@ -51,12 +46,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Toast messages -->
-    <div id="toast-container"></div>
-
     <!-- Scripts -->
     <script src="numberFormat.js"></script>
     <script src="scrapped.js"></script>
+    <script src="bugfixes.js"></script>
 </body>
 </html>
