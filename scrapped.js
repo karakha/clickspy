@@ -2,7 +2,7 @@
 let cookies = 0;
 let cookiesPerClick = 1;
 let upgradeCost = 10;
-let cookieName = "Cookies";
+let cookieName = "cookies";
 
 // === Elements ===
 const el = {
@@ -36,7 +36,7 @@ function showToast(message) {
 // === Game Logic ===
 function updateUI() {
     el.cookieCount.textContent = formatCookies(cookies);
-    el.upgradeButton.textContent = `Upgrade (${formatCookies(upgradeCost)})`;
+    el.upgradeButton.textContent = `upgrade (${formatCookies(upgradeCost)})`;
     el.cookieLabel.textContent = cookieName;
 }
 
@@ -106,7 +106,7 @@ el.upgradeButton.addEventListener("click", () => {
         upgradeCost = Math.ceil(upgradeCost * 1.25);
         showToast(`${cookieName} per click now\n${formatCookies(cookiesPerClick)}`);
     } else {
-        showToast(`Not enough ${cookieName}!\nNeed ${formatCookies(upgradeCost)} ${cookieName}`);
+        showToast(`not enough ${cookieName}!\nneed ${formatCookies(upgradeCost)} ${cookieName}`);
     }
     updateUI();
     saveGame();
